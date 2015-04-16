@@ -1,7 +1,7 @@
 let http = require('http')
 let request = require('request')
 
-let scheme = ''
+let scheme = 'http://'
 let argv = require('yargs')
     .default('host', '127.0.0.1')
     .argv
@@ -24,7 +24,7 @@ http.createServer((req, res) => {
   let options = {
     headers: req.headers,
     method: req.method,
-    url: req.headers['x-destination-url'] || `http://${destinationUrl}${req.url}`
+    url: req.headers['x-destination-url'] || `${destinationUrl}${req.url}`
   }
   let downstreamResponse = req.pipe(request(options))
   logStream.write(JSON.stringify(downstreamResponse.headers))
