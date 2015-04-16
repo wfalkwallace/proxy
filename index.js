@@ -12,10 +12,15 @@ http.createServer((req, res) => {
 
 http.createServer((req, res) => {
   console.log(`Proxying request to: ${destinationUrl + req.url}`)
+  process.stdout.write('\n\n\n' + JSON.stringify(req.headers))
+  req.pipe(process.stdout)
   let options = {
     headers: req.headers,
     method: req.method,
     url: `http://${destinationUrl}${req.url}`
   }
-  req.pipe(request(options)).pipe(res)
+  let downstreamResponse = req.pipe(request(options))
+  process.stdout.write(JSON.stringify(downstreamResponse.headers))
+  downstreamResponse.pipe(process.stdout)
+  downstreamResponse.pipe(res)
 }).listen(8001)
