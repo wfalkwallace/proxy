@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/wfalkwallace/proxy/issues"
   },
-  "homepage": "https://github.com/wfalkwallace/proxy"
+  "homepage": "https://github.com/wfalkwallace/proxy",
+  "dependencies": {
+    "request": "^2.55.0"
+  }
 }
