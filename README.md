@@ -1,4 +1,4 @@
-# proxy
+# Node Proxy Server
 Codepath Node Beta Course Prework: Proxy
 
 ## Required User Stories
