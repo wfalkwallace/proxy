@@ -12,6 +12,6 @@ Codepath Node Beta Course Prework: Proxy
 ## Optional User Stories
  * [ ] Process Forwarding
  * [ ] Better Logging (loglevel)
- * [ ] Documentation (-h)
- * [ ] Support HTTPS
+ * [x] Documentation (-h)
+ * [x] Support HTTPS
  * [ ] **Bonus:** Add additional CLI arguments for https destination ports.
