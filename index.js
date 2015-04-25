@@ -2,7 +2,6 @@ let http = require('http')
 let https = require('https')
 let fs = require('fs')
 let request = require('request')
-let through = require('through')
 let spawn = require('child_process').spawn
 let scheme = 'http://'
 let argv = require('yargs')
@@ -13,14 +12,15 @@ let argv = require('yargs')
     .describe('host', 'Specify a destination host to connect to')
     .describe('port', 'Specify a destination port to connect to')
     .describe('url', 'Specify a destination url to connect to')
-    .describe('file', 'Specify a logfile')
-    .alias('f', 'file')
+    .describe('log', 'Specify a logfile')
+    .alias('l', 'log')
+    .alias('f', 'log')
     .alias('p', 'port')
     .alias('u', 'url')
     .argv
 let port = argv.port || argv.host === '127.0.0.1' ? 8000 : 80
 let destinationUrl = argv.url || scheme + argv.host + ':' + port
-let logStream = argv.file ? fs.createWriteStream(argv.file) : process.stdout
+let logStream = argv.log ? fs.createWriteStream(path.join(__dirname, argv.log)) : process.stdout
 
 if (argv.exec) {
   console.log(argv.exec, [argv._[0]])
@@ -38,7 +38,7 @@ if (argv.exec) {
   https.createServer((req, res) => {
     console.log(`Proxying request to: ${destinationUrl + req.url}`)
     logStream.write('\n' + JSON.stringify(req.headers))
-    through(req, logStream, { autoDestroy: false })
+    req.pipe(logStream, {end: false})
     let options = {
       headers: req.headers,
       method: req.method,
@@ -46,7 +46,7 @@ if (argv.exec) {
     }
     let downstreamResponse = req.pipe(request(options))
     logStream.write('\n' + JSON.stringify(downstreamResponse.headers))
-    through(downstreamResponse, logStream, { autoDestroy: false })
+    downstreamResponse.pipe(logStream, {end: false})
     downstreamResponse.pipe(res)
   }).listen(8001)
 } else {
@@ -61,7 +61,7 @@ if (argv.exec) {
   http.createServer((req, res) => {
     console.log(`Proxying request to: ${destinationUrl + req.url}`)
     logStream.write('\n' + JSON.stringify(req.headers))
-    through(req, logStream, { autoDestroy: false })
+    req.pipe(logStream, {end: false})
     let options = {
       headers: req.headers,
       method: req.method,
@@ -69,7 +69,7 @@ if (argv.exec) {
     }
     let downstreamResponse = req.pipe(request(options))
     logStream.write('\n' + JSON.stringify(downstreamResponse.headers))
-    through(downstreamResponse, logStream, { autoDestroy: false })
+    downstreamResponse.pipe(logStream, {end: false})
     downstreamResponse.pipe(res)
   }).listen(8001)
 }

@@ -19,7 +19,6 @@
   "homepage": "https://github.com/wfalkwallace/proxy",
   "dependencies": {
     "request": "^2.55.0",
-    "through": "^2.3.7",
     "yargs": "^3.7.2"
   }
 }
